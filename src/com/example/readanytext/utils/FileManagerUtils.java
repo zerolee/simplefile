@@ -33,7 +33,7 @@ public class FileManagerUtils {
 							: -1;
 				case FilenameLab.SORT_BY_SIZE:
 					// 根据大小排序
-					return first.getTotalSpace() > second.getTotalSpace() ? 1
+					return first.length() > second.length() ? 1
 							: 0;
 				default:
 					return 0;

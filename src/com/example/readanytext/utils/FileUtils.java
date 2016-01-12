@@ -57,14 +57,15 @@ public class FileUtils {
 			out = new FileOutputStream(file);
 			writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 			writer.write(filecontent);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-			if (writer != null) {
-				writer.close();
-				writer = null;
-			}
+				if (writer != null) {
+					writer.close();
+					writer = null;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -99,7 +100,39 @@ public class FileUtils {
 
 	// 复制
 	public static void copyFile(File file, File newFile) {
-		saveStringToFile(getStringFromFile(file), newFile);
+		byte[] buffer = null;
+		if (file.length() > 1024 * 1024 * 10) {
+			buffer = new byte[1024 * 1024 * 10];
+		} else {
+			buffer = new byte[(int) file.length()];
+		}
+		FileInputStream fromFile = null;
+		FileOutputStream toFile = null;
+
+		try {
+			fromFile = new FileInputStream(file);
+			toFile = new FileOutputStream(newFile);
+
+			while (fromFile.available() > 0) {
+				fromFile.read(buffer);
+				toFile.write(buffer);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fromFile != null) {
+					fromFile.close();
+					fromFile = null;
+				}
+				if (toFile != null) {
+					toFile.close();
+					toFile = null;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	// 获取文件阅读进度
 	// 保存文件阅读进度
