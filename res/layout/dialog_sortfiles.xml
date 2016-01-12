@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sortfile_set"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RadioButton
+        android:id="@+id/sortfile_by_name"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp" 
+        android:text="@string/sortFileByName"
+        android:textSize="20sp"/>
+
+    <RadioButton
+        android:id="@+id/sortfile_by_time"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:text="@string/sortFileByTime"
+        android:textSize="20sp" />
+
+    <RadioButton
+        android:id="@+id/sortfile_by_size"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:text="@string/sortFileBySize"
+        android:textSize="20sp" />
+
+</RadioGroup>

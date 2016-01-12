@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_item_searchFile"
+        android:title="@string/searchFile"/>
+    <item
+        android:id="@+id/menu_item_refreshFile"
+        android:title="@string/refreshFile"/>
+    <item
+        android:id="@+id/menu_item_newFile"
+        android:title="@string/newFile"/>
+    <item
+        android:id="@+id/menu_item_newDirectory"
+        android:title="@string/newDirectory"/>
+    <item
+        android:id="@+id/menu_item_sortFile"
+        android:title="@string/sortFile"/>
+    <item
+        android:id="@+id/menu_item_hideFile"
+        android:title="@string/hidenFile"/>
+	<item
+	    android:id="@+id/menu_item_recentFile"
+	    android:title="@string/recentFile"/>
+</menu>
