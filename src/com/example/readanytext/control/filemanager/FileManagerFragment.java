@@ -37,7 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FileManagerFragment extends Fragment {
+public class FileManagerFragment extends Fragment implements IonBackPressed{
 	public static final String EXTRA_FILE = "com.example.readanytext.FilenameLab.file";
 	public static final String EXTRA_FILENAME = "com.example.readanytext.FilenameLab.filename";
 	private static final String TAG = "FileManagerFragment";
@@ -372,6 +372,8 @@ public class FileManagerFragment extends Fragment {
 		sFilenameLab.saveSetting();
 	}
 
+	
+	@Override
 	public boolean onBackPressed() {
 		File currentFile = sFilenameLab.getCurrentfile();
 		if ("/".equals(currentFile.toString()))
@@ -380,7 +382,6 @@ public class FileManagerFragment extends Fragment {
 		adapter.notifyDataSetChanged();
 		updateIndex(currentFile.getParentFile());
 		return true;
-
 	}
 	// 更新索引
 	private void updateIndex(File file) {
@@ -418,6 +419,7 @@ public class FileManagerFragment extends Fragment {
 		}
 		selectFiles.clear();
 	}
-	
+
+
 	
 }

@@ -13,14 +13,10 @@ public class FileManagerActivity extends SingleFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (fragment == null) {
+		if (fragment == null || !(fragment instanceof IonBackPressed)
+				|| !((FileManagerFragment) fragment).onBackPressed()) {
 			super.onBackPressed();
-		} else {		
-			if(!((FileManagerFragment)fragment).onBackPressed()) {
-				super.onBackPressed();
-			}
 		}
-
 	}
-	
+
 }
