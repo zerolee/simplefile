@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ public class CodeViewFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		file = getArguments().getString(FileManagerFragment.EXTRA_FILE);
 		setHasOptionsMenu(true);
+		new FetchItemTask().execute();
 	}
 	@Override
 	@Nullable
@@ -48,7 +50,7 @@ public class CodeViewFragment extends Fragment {
 			getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 		codeView = (TextView)v.findViewById(R.id.text_content);
-		codeView.setText(FileUtils.getStringFromFile(file));
+		codeView.setText("");
 		readSpeed = (ScrollView) v.findViewById(R.id.read_speed);
 		return v;
 	}
@@ -111,6 +113,24 @@ public class CodeViewFragment extends Fragment {
 		editor.putInt("X", readSpeed.getScrollX());
 		editor.putInt("Y", readSpeed.getScrollY());
 		editor.commit();
+	}
+	
+	
+	private class FetchItemTask extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected String doInBackground(Void... params) {
+			
+			return FileUtils.getStringFromFile(file);
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			codeView.setText(result);
+		}
+		
+		
 	}
 	public static CodeViewFragment newInstance(String file) {
 		Bundle args = new Bundle();

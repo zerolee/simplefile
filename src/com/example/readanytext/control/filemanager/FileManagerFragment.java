@@ -1,6 +1,7 @@
 package com.example.readanytext.control.filemanager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -309,11 +310,12 @@ public class FileManagerFragment extends Fragment implements IonBackPressed{
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_filesystem, menu);
 		MenuItem item = menu.findItem(R.id.menu_item_hideFile);
-		if (sFilenameLab.isShowHidden()) {
+		/*if (sFilenameLab.isShowHidden()) {
 			item.setTitle("不显示隐藏文件");
 		} else {
 			item.setTitle("显示隐藏文件");
-		}
+		}*/
+	
 	}
 	
 	@Override
@@ -414,8 +416,12 @@ public class FileManagerFragment extends Fragment implements IonBackPressed{
 	
 	private void pasteCopyFile(){
 		for (File file : selectFiles) {
+			try {
 			FileUtils.copyFile(file, 
 					new File(sFilenameLab.getCurrentfile().getPath() + "/" + file.getName()));
+			} catch (IOException e) {
+				Toast.makeText(getActivity(), "复制文件失败", Toast.LENGTH_SHORT).show();
+			}
 		}
 		selectFiles.clear();
 	}

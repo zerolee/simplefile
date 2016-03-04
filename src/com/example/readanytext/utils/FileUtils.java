@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
 
 import android.net.Uri;
 import android.util.Log;
@@ -90,7 +91,19 @@ public class FileUtils {
 
 	// 删除文件
 	public static void deleteFile(File file) {
-		file.delete();
+		if (file.isFile() || file.listFiles().length == 0) {
+			file.delete();
+		} else {
+			deleteDirectory(file);
+			deleteFile(file);
+		}
+	}
+
+	// 删除目录
+	private static void deleteDirectory(File file) {
+		for (File f : file.listFiles()) {
+			deleteFile(f);
+		}
 	}
 
 	// 重命名
@@ -99,7 +112,38 @@ public class FileUtils {
 	}
 
 	// 复制
-	public static void copyFile(File file, File newFile) {
+	private static void copyFileByChannel(File file, File newFile)
+			throws IOException {
+		if (file.isFile()) {
+			FileInputStream in = null;
+			FileOutputStream out = null;
+			try {
+				in = new FileInputStream(file);
+				out = new FileOutputStream(newFile);
+				FileChannel inChannel = in.getChannel(), outChannel = out
+						.getChannel();
+				inChannel.transferTo(0, inChannel.size(), outChannel);
+			} finally {
+				if (in != null) {
+					in.close();
+					in = null;
+				}
+				if (out != null) {
+					out.close();
+					out = null;
+				}
+			}
+		} else {
+			newFile.mkdir();
+			for (File f : file.listFiles()){
+				copyFileByChannel(f, new File(newFile.getCanonicalFile() +"/" + f.getName()));
+			}
+		}
+
+	}
+
+	@SuppressWarnings("unused")
+	private static void copyFileBySimple(File file, File newFile) {
 		byte[] buffer = null;
 		if (file.length() > 1024 * 1024 * 10) {
 			buffer = new byte[1024 * 1024 * 10];
@@ -133,6 +177,10 @@ public class FileUtils {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static void copyFile(File file, File newFile) throws IOException {
+		copyFileByChannel(file, newFile);
 	}
 	// 获取文件阅读进度
 	// 保存文件阅读进度

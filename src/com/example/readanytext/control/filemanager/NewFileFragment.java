@@ -15,13 +15,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class NewFileFragment extends DialogFragment {
+	@SuppressWarnings("unused")
 	private static final String TAG = "NewFileFragment"; 
 	@SuppressLint("InflateParams")
 	@Override
