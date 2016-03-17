@@ -22,7 +22,7 @@ public class FileUtils {
 	
 	// 获取文件
 	public static String getStringFromFile(String filename) {
-		Log.d("FileUtils", filename);
+	//	Log.d("FileUtils", filename);
 		return getStringFromFile(new File(filename));
 	}
 
@@ -221,10 +221,14 @@ public class FileUtils {
 	 */
 	private static String CharSetText(File file){
 		BufferedInputStream bis = null;
-		int p = 0;
+		int p = 0, p1 , p2, p3, p4;
 		try {
 			bis = new BufferedInputStream(new FileInputStream(file));
-			p = (bis.read() << 8) + bis.read();
+			p1 = bis.read();
+			p2 = bis.read();
+			p3 = bis.read();
+			p4 = bis.read();
+			p = (p1 << 8) + p2;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -237,7 +241,12 @@ public class FileUtils {
 			}
 		}
 
-		
+		if (((p1 >>> 7) == 0 )
+				|| ((p1 >>> 5) == 6 && (p2 >>> 6) == 2)
+				|| ((p1 >>> 4) == 15 && (p2 >>> 6) == 2 && (p3 >>> 6) == 2)
+				|| ((p1 >>> 3) == 31 && (p2 >>> 6) == 2 && (p3 >>> 6) == 2 &&(p4 >>> 6) == 2)){
+			return "UTF-8";
+		}
 		
 		switch (p) {
 		case 0xefbb:
@@ -251,3 +260,11 @@ public class FileUtils {
 		}
 	}
 }
+
+/*
+ * UTF-8
+ * 0xxxxxxx
+ * 110xxxxx 10xxxxxx
+ * 1110xxxx 10xxxxxx 10xxxxxx
+ * 11110xxx 10xxxxxx 10xxxxxx 10xxxxxxx
+ */

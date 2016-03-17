@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -127,7 +128,62 @@ public class CodeViewFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			codeView.setText(result);
+			//codeView.setText(result);
+			result = result.replaceAll("\\bpublic\\b", "<font color=red>public</font>");
+			result = result.replaceAll("\\bprotected\\b", "<font color=red>protected</font>");
+			result = result.replaceAll("\\bprivate\\b", "<font color=red>private</font>");
+			
+			result = result.replaceAll("\\bstatic\\b", "<font color=red>static</font>");
+			result = result.replaceAll("\\bfinal\\b", "<font color=red>final</font>");
+			result = result.replaceAll("\\bextends\\b", "<font color=red>extends</font>");
+			result = result.replaceAll("\\bimplements\\b", "<font color=red>implements</font>");
+			result = result.replaceAll("\\bsuper\\b", "<font color=red>super</font>");
+			result = result.replaceAll("\\bthis\\b", "<font color=red>this</font>");
+			
+			result = result.replaceAll("\\bnull\\b", "<font color=red>null</font>");
+			
+			result = result.replaceAll("\\btrue\\b", "<font color=red>true</font>");
+			result = result.replaceAll("\\bfalse\\b", "<font color=red>false</font>");
+			
+			result = result.replaceAll("\\breturn\\b", "<font color=red>return</font>");
+			result = result.replaceAll("\\bnew\\b", "<font color=red>new</font>");
+			
+			result = result.replaceAll("\\bvoid\\b", "<font color=red>void</font>");
+			result = result.replaceAll("\\bint\\b", "<font color=red>int</font>");
+			result = result.replaceAll("\\blong\\b", "<font color=red>long</font>");
+			result = result.replaceAll("\\bdouble\\b", "<font color=red>double</font>");
+			result = result.replaceAll("\\bbyte\\b", "<font color=red>byte</font>");
+			result = result.replaceAll("\\bboolean\\b", "<font color=red>boolean</font>");
+			
+			result = result.replaceAll("\\bimport\\b", "<font color=red>import</font>");
+			result = result.replaceAll("\\bpackage\\b", "<font color=red>package</font>");
+			
+			result = result.replaceAll("\\btry\\b", "<font color=red>try</font>");
+			result = result.replaceAll("\\bcatch\\b", "<font color=red>catch</font>");
+			result = result.replaceAll("\\bfinally\\b", "<font color=red>finally</font>");
+			
+			result = result.replaceAll(" ", "&nbsp;");
+			result = result.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+			result = result.replaceAll("\r", "<br/>");
+			
+			
+			
+			
+			result = result.replaceAll("\\bif\\b", "<font color=red>if</font>");
+			result = result.replaceAll("\\bfor\\b", "<font color=red>for</font>");
+			result = result.replaceAll("\\bwhile\\b", "<font color=red>while</font>");
+			result = result.replaceAll("\\belse\\b", "<font color=red>else</font>");
+			result = result.replaceAll("\\bswitch\\b", "<font color=red>switch</font>");
+			result = result.replaceAll("\\bcase\\b", "<font color=red>case</font>");
+			result = result.replaceAll("\\bbreak\\b", "<font color=red>break</font>");
+			result = result.replaceAll("\\bcontinue\\b", "<font color=red>continue</font>");
+			result = result.replaceAll("\\bclass\\b", "<font color=red>class</font>");
+			
+			result = result.replaceAll("\n", "<br/>");
+			
+			//
+			
+			codeView.setText(Html.fromHtml(result));
 		}
 		
 		
