@@ -310,12 +310,12 @@ public class FileManagerFragment extends Fragment implements IonBackPressed{
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.fragment_filesystem, menu);
 		MenuItem item = menu.findItem(R.id.menu_item_hideFile);
-		/*if (sFilenameLab.isShowHidden()) {
-			item.setTitle("不显示隐藏文件");
-		} else {
-			item.setTitle("显示隐藏文件");
-		}*/
-	
+		if (sFilenameLab != null) {
+			if (sFilenameLab.isShowHidden()) 
+				item.setTitle("不显示隐藏文件");
+			else 
+				item.setTitle("显示隐藏文件");
+		}
 	}
 	
 	@Override

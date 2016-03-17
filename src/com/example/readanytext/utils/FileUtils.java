@@ -1,5 +1,6 @@
 package com.example.readanytext.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,12 +9,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 
 import android.net.Uri;
 import android.util.Log;
 
-public class FileUtils {
+public class FileUtils {	
+	
 	// 获取文件
 	public static String getStringFromFile(String filename) {
 		Log.d("FileUtils", filename);
@@ -23,8 +29,31 @@ public class FileUtils {
 	public static String getStringFromFile(Uri uri) {
 		return getStringFromFile(uri.toString().substring(7));
 	}
-
-	public static String getStringFromFile(File file) {
+	// 或许我应该准备一个二进制的读取文件
+    // 内存映射文件
+	// 记住读取的区间，下次来的时候继续读取
+	// 设置一个总长度
+	private static ByteBuffer getByteFromFileByMemoryMap(File file){
+		long i = 0, size = file.length();
+		MappedByteBuffer out = null;
+		try {
+			out = new RandomAccessFile(file, "rw").
+					getChannel().map(FileChannel.MapMode.READ_WRITE, i, size);
+		} catch (Exception e){
+			
+		}
+		return out;
+	}
+	//
+	public static String getStringFromFile(File file){
+		return Charset.forName(CharSetText(file)).decode(getByteFromFileByMemoryMap(file)).toString();
+	}
+	
+	public static byte[] getByteFromFile(File file){
+		return getByteFromFileByMemoryMap(file).toString().getBytes();
+	}
+	//
+	public static String getStringFromFile2(File file) {
 		FileInputStream in = null;
 		BufferedReader reader = null;
 		StringBuilder content = new StringBuilder();
@@ -184,4 +213,41 @@ public class FileUtils {
 	}
 	// 获取文件阅读进度
 	// 保存文件阅读进度
+	
+	
+	/*
+	 * 判断文件的编码格式
+	 * @return 文件编码格式
+	 */
+	private static String CharSetText(File file){
+		BufferedInputStream bis = null;
+		int p = 0;
+		try {
+			bis = new BufferedInputStream(new FileInputStream(file));
+			p = (bis.read() << 8) + bis.read();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (bis != null){
+				try {
+					bis.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+		
+		
+		switch (p) {
+		case 0xefbb:
+			return "UTF-8";
+		case 0xfffe:
+			return "Unicode";
+		case 0xfeff:
+			return "UTF-16BE";
+		default:
+			return "GBK";
+		}
+	}
 }
