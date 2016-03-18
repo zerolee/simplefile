@@ -16,42 +16,45 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
 import android.net.Uri;
-import android.util.Log;
 
-public class FileUtils {	
-	
+public class FileUtils {
+
 	// 获取文件
 	public static String getStringFromFile(String filename) {
-	//	Log.d("FileUtils", filename);
+		// Log.d("FileUtils", filename);
 		return getStringFromFile(new File(filename));
 	}
 
 	public static String getStringFromFile(Uri uri) {
 		return getStringFromFile(uri.toString().substring(7));
 	}
+
 	// 或许我应该准备一个二进制的读取文件
-    // 内存映射文件
+	// 内存映射文件
 	// 记住读取的区间，下次来的时候继续读取
 	// 设置一个总长度
-	private static ByteBuffer getByteFromFileByMemoryMap(File file){
+	private static ByteBuffer getByteFromFileByMemoryMap(File file) {
 		long i = 0, size = file.length();
 		MappedByteBuffer out = null;
 		try {
-			out = new RandomAccessFile(file, "rw").
-					getChannel().map(FileChannel.MapMode.READ_WRITE, i, size);
-		} catch (Exception e){
-			
+			out = new RandomAccessFile(file, "rw").getChannel().map(
+					FileChannel.MapMode.READ_WRITE, i, size);
+		} catch (Exception e) {
+
 		}
 		return out;
 	}
+
 	//
-	public static String getStringFromFile(File file){
-		return Charset.forName(CharSetText(file)).decode(getByteFromFileByMemoryMap(file)).toString();
+	public static String getStringFromFile(File file) {
+		return Charset.forName(CharSetText(file))
+				.decode(getByteFromFileByMemoryMap(file)).toString();
 	}
-	
-	public static byte[] getByteFromFile(File file){
+
+	public static byte[] getByteFromFile(File file) {
 		return getByteFromFileByMemoryMap(file).toString().getBytes();
 	}
+
 	//
 	public static String getStringFromFile2(File file) {
 		FileInputStream in = null;
@@ -164,8 +167,9 @@ public class FileUtils {
 			}
 		} else {
 			newFile.mkdir();
-			for (File f : file.listFiles()){
-				copyFileByChannel(f, new File(newFile.getCanonicalFile() +"/" + f.getName()));
+			for (File f : file.listFiles()) {
+				copyFileByChannel(f, new File(newFile.getCanonicalFile() + "/"
+						+ f.getName()));
 			}
 		}
 
@@ -211,17 +215,18 @@ public class FileUtils {
 	public static void copyFile(File file, File newFile) throws IOException {
 		copyFileByChannel(file, newFile);
 	}
+
 	// 获取文件阅读进度
 	// 保存文件阅读进度
-	
-	
+
 	/*
 	 * 判断文件的编码格式
+	 * 
 	 * @return 文件编码格式
 	 */
-	private static String CharSetText(File file){
+	private static String CharSetText(File file) {
 		BufferedInputStream bis = null;
-		int p = 0, p1 , p2, p3, p4;
+		int p = 0, p1, p2, p3, p4;
 		try {
 			bis = new BufferedInputStream(new FileInputStream(file));
 			p1 = bis.read();
@@ -232,7 +237,7 @@ public class FileUtils {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			if (bis != null){
+			if (bis != null) {
 				try {
 					bis.close();
 				} catch (IOException e) {
@@ -241,30 +246,24 @@ public class FileUtils {
 			}
 		}
 
-		if (((p1 >>> 7) == 0 )
+		if (p >= 0x8140 && p <= 0xfefe) {
+			return "GBK";
+		} else if (((p1 >>> 7) == 0)
 				|| ((p1 >>> 5) == 6 && (p2 >>> 6) == 2)
 				|| ((p1 >>> 4) == 15 && (p2 >>> 6) == 2 && (p3 >>> 6) == 2)
-				|| ((p1 >>> 3) == 31 && (p2 >>> 6) == 2 && (p3 >>> 6) == 2 &&(p4 >>> 6) == 2)){
+				|| ((p1 >>> 3) == 31 && (p2 >>> 6) == 2 && (p3 >>> 6) == 2 && (p4 >>> 6) == 2)) {
 			return "UTF-8";
-		}
-		
-		switch (p) {
-		case 0xefbb:
-			return "UTF-8";
-		case 0xfffe:
-			return "Unicode";
-		case 0xfeff:
+		} else {
 			return "UTF-16BE";
-		default:
-			return "GBK";
 		}
+		/*
+		 * switch (p) { case 0xefbb: return "UTF-8"; case 0xfffe: return
+		 * "Unicode"; case 0xfeff: return "UTF-16BE"; default: return "GBK"; }
+		 */
 	}
 }
 
 /*
- * UTF-8
- * 0xxxxxxx
- * 110xxxxx 10xxxxxx
- * 1110xxxx 10xxxxxx 10xxxxxx
- * 11110xxx 10xxxxxx 10xxxxxx 10xxxxxxx
+ * UTF-8 0xxxxxxx 110xxxxx 10xxxxxx 1110xxxx 10xxxxxx 10xxxxxx 11110xxx 10xxxxxx
+ * 10xxxxxx 10xxxxxxx
  */
